@@ -1,0 +1,360 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Хранилище dbMusicInfoModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Albums">
+          <Key>
+            <PropertyRef Name="IdAlbum" />
+          </Key>
+          <Property Name="IdAlbum" Type="int" Nullable="false" />
+          <Property Name="IdArtist" Type="int" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="1000" />
+          <Property Name="Image" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="Artists">
+          <Key>
+            <PropertyRef Name="IdArtist" />
+          </Key>
+          <Property Name="IdArtist" Type="int" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="1000" />
+          <Property Name="Image" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="Ganers">
+          <Key>
+            <PropertyRef Name="IdGaner" />
+          </Key>
+          <Property Name="IdGaner" Type="int" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "dbMusicInfo.dbo.Ganers_Artists" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="Ganers_Artists">
+          <Key>
+            <PropertyRef Name="IdGaner" />
+            <PropertyRef Name="IdArtist" />
+          </Key>
+          <Property Name="IdGaner" Type="int" Nullable="false" />
+          <Property Name="IdArtist" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Songs">
+          <Key>
+            <PropertyRef Name="IdSong" />
+          </Key>
+          <Property Name="IdSong" Type="int" Nullable="false" />
+          <Property Name="IdArtist" Type="int" Nullable="false" />
+          <Property Name="Text" Type="varchar(max)" />
+          <Property Name="Length" Type="varchar" MaxLength="5" Nullable="false" />
+        </EntityType>
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "dbMusicInfo.dbo.Songs_Albums" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="Songs_Albums">
+          <Key>
+            <PropertyRef Name="IdSong" />
+            <PropertyRef Name="IdAlbum" />
+          </Key>
+          <Property Name="IdSong" Type="int" Nullable="false" />
+          <Property Name="IdAlbum" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Albums_ToArtists">
+          <End Role="Artists" Type="Self.Artists" Multiplicity="1" />
+          <End Role="Albums" Type="Self.Albums" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Artists">
+              <PropertyRef Name="IdArtist" />
+            </Principal>
+            <Dependent Role="Albums">
+              <PropertyRef Name="IdArtist" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Songs_Albums_ToAlboms">
+          <End Role="Albums" Type="Self.Albums" Multiplicity="1" />
+          <End Role="Songs_Albums" Type="Self.Songs_Albums" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Albums">
+              <PropertyRef Name="IdAlbum" />
+            </Principal>
+            <Dependent Role="Songs_Albums">
+              <PropertyRef Name="IdAlbum" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Songs_Albums_ToArtists">
+          <End Role="Artists" Type="Self.Artists" Multiplicity="1" />
+          <End Role="Ganers_Artists" Type="Self.Ganers_Artists" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Artists">
+              <PropertyRef Name="IdArtist" />
+            </Principal>
+            <Dependent Role="Ganers_Artists">
+              <PropertyRef Name="IdArtist" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Songs_Albums_ToGaners">
+          <End Role="Ganers" Type="Self.Ganers" Multiplicity="1" />
+          <End Role="Ganers_Artists" Type="Self.Ganers_Artists" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Ganers">
+              <PropertyRef Name="IdGaner" />
+            </Principal>
+            <Dependent Role="Ganers_Artists">
+              <PropertyRef Name="IdGaner" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Songs_Albums_ToSongs">
+          <End Role="Songs" Type="Self.Songs" Multiplicity="1" />
+          <End Role="Songs_Albums" Type="Self.Songs_Albums" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Songs">
+              <PropertyRef Name="IdSong" />
+            </Principal>
+            <Dependent Role="Songs_Albums">
+              <PropertyRef Name="IdSong" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Songs_ToArtists">
+          <End Role="Artists" Type="Self.Artists" Multiplicity="1" />
+          <End Role="Songs" Type="Self.Songs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Artists">
+              <PropertyRef Name="IdArtist" />
+            </Principal>
+            <Dependent Role="Songs">
+              <PropertyRef Name="IdArtist" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище dbMusicInfoModelContainer">
+          <EntitySet Name="Albums" EntityType="Self.Albums" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Artists" EntityType="Self.Artists" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Ganers" EntityType="Self.Ganers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Songs" EntityType="Self.Songs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Ganers_Artists" EntityType="Self.Ganers_Artists" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Ganers_Artists].[IdGaner] AS [IdGaner], 
+    [Ganers_Artists].[IdArtist] AS [IdArtist]
+    FROM [dbo].[Ganers_Artists] AS [Ganers_Artists]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="Songs_Albums" EntityType="Self.Songs_Albums" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Songs_Albums].[IdSong] AS [IdSong], 
+    [Songs_Albums].[IdAlbum] AS [IdAlbum]
+    FROM [dbo].[Songs_Albums] AS [Songs_Albums]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_Albums_ToArtists" Association="Self.FK_Albums_ToArtists">
+            <End Role="Artists" EntitySet="Artists" />
+            <End Role="Albums" EntitySet="Albums" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Songs_Albums_ToAlboms" Association="Self.FK_Songs_Albums_ToAlboms">
+            <End Role="Albums" EntitySet="Albums" />
+            <End Role="Songs_Albums" EntitySet="Songs_Albums" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Songs_Albums_ToArtists" Association="Self.FK_Songs_Albums_ToArtists">
+            <End Role="Artists" EntitySet="Artists" />
+            <End Role="Ganers_Artists" EntitySet="Ganers_Artists" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Songs_Albums_ToGaners" Association="Self.FK_Songs_Albums_ToGaners">
+            <End Role="Ganers" EntitySet="Ganers" />
+            <End Role="Ganers_Artists" EntitySet="Ganers_Artists" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Songs_Albums_ToSongs" Association="Self.FK_Songs_Albums_ToSongs">
+            <End Role="Songs" EntitySet="Songs" />
+            <End Role="Songs_Albums" EntitySet="Songs_Albums" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Songs_ToArtists" Association="Self.FK_Songs_ToArtists">
+            <End Role="Artists" EntitySet="Artists" />
+            <End Role="Songs" EntitySet="Songs" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="dbMusicInfoModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Album">
+          <Key>
+            <PropertyRef Name="IdAlbum" />
+          </Key>
+          <Property Name="IdAlbum" Type="Int32" Nullable="false" />
+          <Property Name="IdArtist" Type="Int32" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="Image" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Artist" Relationship="Self.FK_Albums_ToArtists" FromRole="Albums" ToRole="Artists" />
+          <NavigationProperty Name="Songs" Relationship="Self.Songs_Albums" FromRole="Albums" ToRole="Songs" />
+        </EntityType>
+        <EntityType Name="Artist">
+          <Key>
+            <PropertyRef Name="IdArtist" />
+          </Key>
+          <Property Name="IdArtist" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="Image" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Albums" Relationship="Self.FK_Albums_ToArtists" FromRole="Artists" ToRole="Albums" />
+          <NavigationProperty Name="Songs" Relationship="Self.FK_Songs_ToArtists" FromRole="Artists" ToRole="Songs" />
+          <NavigationProperty Name="Ganers" Relationship="Self.Ganers_Artists" FromRole="Artists" ToRole="Ganers" />
+        </EntityType>
+        <EntityType Name="Ganer">
+          <Key>
+            <PropertyRef Name="IdGaner" />
+          </Key>
+          <Property Name="IdGaner" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Artists" Relationship="Self.Ganers_Artists" FromRole="Ganers" ToRole="Artists" />
+        </EntityType>
+        <EntityType Name="Song">
+          <Key>
+            <PropertyRef Name="IdSong" />
+          </Key>
+          <Property Name="IdSong" Type="Int32" Nullable="false" />
+          <Property Name="IdArtist" Type="Int32" Nullable="false" />
+          <Property Name="Text" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Length" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Artist" Relationship="Self.FK_Songs_ToArtists" FromRole="Songs" ToRole="Artists" />
+          <NavigationProperty Name="Albums" Relationship="Self.Songs_Albums" FromRole="Songs" ToRole="Albums" />
+        </EntityType>
+        <Association Name="FK_Albums_ToArtists">
+          <End Role="Artists" Type="Self.Artist" Multiplicity="1" />
+          <End Role="Albums" Type="Self.Album" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Artists">
+              <PropertyRef Name="IdArtist" />
+            </Principal>
+            <Dependent Role="Albums">
+              <PropertyRef Name="IdArtist" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Songs_ToArtists">
+          <End Role="Artists" Type="Self.Artist" Multiplicity="1" />
+          <End Role="Songs" Type="Self.Song" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Artists">
+              <PropertyRef Name="IdArtist" />
+            </Principal>
+            <Dependent Role="Songs">
+              <PropertyRef Name="IdArtist" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Ganers_Artists">
+          <End Role="Artists" Type="Self.Artist" Multiplicity="*" />
+          <End Role="Ganers" Type="Self.Ganer" Multiplicity="*" />
+        </Association>
+        <Association Name="Songs_Albums">
+          <End Role="Albums" Type="Self.Album" Multiplicity="*" />
+          <End Role="Songs" Type="Self.Song" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="dbMusicInfoEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Albums" EntityType="Self.Album" />
+          <EntitySet Name="Artists" EntityType="Self.Artist" />
+          <EntitySet Name="Ganers" EntityType="Self.Ganer" />
+          <EntitySet Name="Songs" EntityType="Self.Song" />
+          <AssociationSet Name="FK_Albums_ToArtists" Association="Self.FK_Albums_ToArtists">
+            <End Role="Artists" EntitySet="Artists" />
+            <End Role="Albums" EntitySet="Albums" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Songs_ToArtists" Association="Self.FK_Songs_ToArtists">
+            <End Role="Artists" EntitySet="Artists" />
+            <End Role="Songs" EntitySet="Songs" />
+          </AssociationSet>
+          <AssociationSet Name="Ganers_Artists" Association="Self.Ganers_Artists">
+            <End Role="Artists" EntitySet="Artists" />
+            <End Role="Ganers" EntitySet="Ganers" />
+          </AssociationSet>
+          <AssociationSet Name="Songs_Albums" Association="Self.Songs_Albums">
+            <End Role="Albums" EntitySet="Albums" />
+            <End Role="Songs" EntitySet="Songs" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище dbMusicInfoModelContainer" CdmEntityContainer="dbMusicInfoEntities">
+          <EntitySetMapping Name="Albums">
+            <EntityTypeMapping TypeName="dbMusicInfoModel.Album">
+              <MappingFragment StoreEntitySet="Albums">
+                <ScalarProperty Name="IdAlbum" ColumnName="IdAlbum" />
+                <ScalarProperty Name="IdArtist" ColumnName="IdArtist" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Image" ColumnName="Image" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Artists">
+            <EntityTypeMapping TypeName="dbMusicInfoModel.Artist">
+              <MappingFragment StoreEntitySet="Artists">
+                <ScalarProperty Name="IdArtist" ColumnName="IdArtist" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Image" ColumnName="Image" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Ganers">
+            <EntityTypeMapping TypeName="dbMusicInfoModel.Ganer">
+              <MappingFragment StoreEntitySet="Ganers">
+                <ScalarProperty Name="IdGaner" ColumnName="IdGaner" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Songs">
+            <EntityTypeMapping TypeName="dbMusicInfoModel.Song">
+              <MappingFragment StoreEntitySet="Songs">
+                <ScalarProperty Name="IdSong" ColumnName="IdSong" />
+                <ScalarProperty Name="IdArtist" ColumnName="IdArtist" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="Length" ColumnName="Length" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="Ganers_Artists" TypeName="dbMusicInfoModel.Ganers_Artists" StoreEntitySet="Ganers_Artists">
+            <EndProperty Name="Artists">
+              <ScalarProperty Name="IdArtist" ColumnName="IdArtist" />
+            </EndProperty>
+            <EndProperty Name="Ganers">
+              <ScalarProperty Name="IdGaner" ColumnName="IdGaner" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="Songs_Albums" TypeName="dbMusicInfoModel.Songs_Albums" StoreEntitySet="Songs_Albums">
+            <EndProperty Name="Albums">
+              <ScalarProperty Name="IdAlbum" ColumnName="IdAlbum" />
+            </EndProperty>
+            <EndProperty Name="Songs">
+              <ScalarProperty Name="IdSong" ColumnName="IdSong" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
